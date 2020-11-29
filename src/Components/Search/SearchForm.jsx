@@ -10,23 +10,26 @@ class SearchForm extends Component {
     }
     handleSubmit = (event)=>{
         event.preventDefault();
+
         axios.get(`https://api.crossref.org/works?query=${this.state.searchValue}`, { mode: 'no-cors' })
         .then(response => {
-            console.log(response.data.message.items);
-            
             let results = [];
+
             response.data.message.items.map(item=>{
                 const createdTime =  item.created['date-parts'][0].join(" ");
                 const title = item.title.join(" ");
                 let authors=[];
+                let authorData = {};
+                const author = (authors.length>0)?authors.join(" "):"";
+
                 if(item.author)
                 {
                     item.author.forEach(author => {
                         authors.push(`${author.given.charAt(0)}.${author.family},`)
                     });
                 }
-                const author = (authors.length>0)?authors.join(" "):"";
-                let data = {
+
+                authorData = {
                     author:author,
                     abstract:(item.abstract)?item.abstract:"",
                     doi:item.DOI,
@@ -35,8 +38,10 @@ class SearchForm extends Component {
                     title:title,
                     isReferencedByCount:item['is-referenced-by-count']
                 }
-                results.push(data);
-            })
+
+                results.push(authorData);
+            });
+            
             this.props.showResults();
             this.props.resultsInfo(results);
         })
