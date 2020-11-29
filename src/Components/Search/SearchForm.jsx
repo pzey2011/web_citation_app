@@ -4,7 +4,6 @@ import axios from 'axios';
 class SearchForm extends Component {
     state = {
         searchValue: '',
-        results:[]
     }
     searchInputChange = (event) =>{
         this.setState({searchValue:event.currentTarget.value});
@@ -38,8 +37,6 @@ class SearchForm extends Component {
                 }
                 results.push(data);
             })
-            this.setState({results:results});
-            debugger;
             this.props.showResults();
             this.props.resultsInfo(results);
         })
@@ -52,8 +49,7 @@ class SearchForm extends Component {
                     <button type="submit">
                         <i className="fas fa-search"></i>
                     </button>
-                    <input type="text" value={this.state.searchValue} onChange={this.searchInputChange}/>
-                    {}                
+                    <input type="text" value={this.state.searchValue} onChange={this.searchInputChange}/>                
                 </div>
 
             </form>
